@@ -108,24 +108,24 @@ hendrerit id, lorem. Maecenas nec odio et ant</p>
       <div>
           <div class="col-md-12 text-center"><h2>Colorization</h2></div>
         </div>
-      <form action="/process_image">
-         <input type="file" name="name" accept="image/*" multiple><br><br>
+      <form action="/process_image" method="POST" enctype="multipart/form-data">
+         <input type="file" name="photos" accept="image/*" multiple=""><br><br>
          After uploading multiple files, click Submit.<br>
          <input type="submit" value="Submit">
       </form>
 </div>
-                  <form class="probootstrap-form">
+            <form class="probootstrap-form" action="/contact_us" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                   <label for="name">Your Name</label>
-                  <input type="text" class="form-control" id="name">
+                  <input type="text" class="form-control" id="name" name="name">
                 </div>
                 <div class="form-group">
                   <label for="email">Your Email</label>
-                  <input type="text" class="form-control" inputd="email">
+                  <input type="text" class="form-control" id="email" name="email">
                 </div>
                 <div class="form-group">
                   <label for="note">Note</label>
-                  <textarea name="" id="note" cols="20" rows="5" class="form-control"></textarea>
+                  <textarea name="note" id="note" cols="20" rows="5" class="form-control"></textarea>
                 </div>
                 <div class="form-group">
                   <input type="submit" class="btn btn-primary btn-lg" value="Send RSVP">
