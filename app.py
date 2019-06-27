@@ -1,4 +1,3 @@
-# import the necessary packages
 import os
 import sys
 import requests
@@ -30,22 +29,20 @@ from os import path
 # from fasterai.visualize import *
 from pathlib import Path
 
+from config import ALLOWED_EXTENSIONS, FROM_EMAIL, TO_EMAIL, SENDGRIP_API, HOST_IP, PORT
 
 # torch.backends.cudnn.benchmark=True
 
 # image_colorizer = get_image_colorizer(artistic=True)
-# video_colorizer = get_video_colorizer()
 
 # os.environ['CUDA_VISIBLE_DEVICES']='0'
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-TO_EMAIL = 'lazukav@gmail.com'
-
-app = Flask(__name__, template_folder=".")
+app = Flask(__name__, template_folder="./static")
 
 # app.config['SENDGRID_API_KEY'] = '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'
 # app.config['SENDGRID_DEFAULT_FROM'] = 'customer@colorizer.com'
-sg = SendGridAPIClient('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')
+sg = SendGridAPIClient(SENDGRIP_API)
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -58,8 +55,10 @@ def allowed_file(filename):
 def process_image():
     if request.method == 'POST':
         memory_file = BytesIO()
-        if request.files.getlist('photos')[0].filename == '':
-            return redirect(url_for('index'))
+        # if request.files.get('photos') and request.files.get('photos').filename == '':
+        #     return redirect(url_for('index'))
+        # if request.files.getlist('photos')[0].filename == '':
+            # return redirect(url_for('index'))
         with zipfile.ZipFile(memory_file, 'w') as zf:
             # print(request.files.getlist('photos'))
             for f in request.files.getlist('photos'):
@@ -73,7 +72,7 @@ def process_image():
                     zf.writestr(data, f.read())
                     print(f)
         memory_file.seek(0)
-        return send_file(memory_file, attachment_filename='capsule.zip', as_attachment=True)
+        return send_file(memory_file, attachment_filename='result.zip', as_attachment=True)
 
             # return 'Upload completed.'
     return redirect(url_for('index'))
@@ -85,7 +84,7 @@ def contact_us():
     if request.method == 'POST':
         if request.form['email'] and request.form['note']:
             message = Mail(
-                from_email='customer@colorizer.com',
+                from_email=FROM_EMAIL,
                 to_emails=TO_EMAIL,
                 subject='Customer of colorizer',
                 html_content='<strong>'+ request.form['name'] +'</strong> <br>' + request.form['note'])
@@ -101,7 +100,8 @@ def contact_us():
     # response = sg.send(message)
     return redirect(url_for('index'))
 
-@app.route('/')
+
+@app.route('/hello_world')
 def hello_world():
     # message = Mail(
     #     from_email='customer@colorizer.com',
@@ -112,7 +112,7 @@ def hello_world():
     return 'Hello, World!'
 
 
-@app.route('/index')
+@app.route('/')
 def index():
     return render_template('index.html')
 
@@ -143,6 +143,4 @@ def index():
 
 
 if __name__ == '__main__':
-    port = 5005
-    host = '127.0.0.1'
-    app.run(host=host, port=port, threaded=True, debug=True)
+    app.run(host=HOST_IP, port=PORT, threaded=True, debug=True)
