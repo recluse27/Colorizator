@@ -39,7 +39,6 @@ from config import ALLOWED_EXTENSIONS, FROM_EMAIL, TO_EMAIL, SENDGRIP_API, HOST_
 
 app = Flask(__name__, template_folder="./static")
 
-# app.config['SENDGRID_API_KEY'] = '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'
 # app.config['SENDGRID_DEFAULT_FROM'] = 'customer@colorizer.com'
 sg = SendGridAPIClient(SENDGRIP_API)
 
